@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O'Donovan Family</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --surface2: #f2f0eb;
+    --border: rgba(0,0,0,0.08);
+    --border-mid: rgba(0,0,0,0.13);
+    --text: #1a1a18;
+    --muted: #6b6b66;
+    --subtle: #a0a09a;
+    --accent: #2d5a3d;
+    --accent-light: #e8f0ea;
+    --danger: #b03a2e;
+    --danger-light: #fdf0ee;
+    --warning: #8a6400;
+    --warning-light: #fef9ec;
+    --info: #1a4a7a;
+    --info-light: #eaf1fb;
+    --tim: #6b2020;
+    --erin: #2d5a3d;
+    --ryan: #1a4a7a;
+    --flynn: #7a4a00;
+    --family: #3d2d6b;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo { display: flex; align-items: baseline; gap: 12px; }
+  .logo h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+  .logo .tagline { font-size: 12px; color: var(--subtle); font-style: italic; }
+  .header-meta { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 16px; }
+  .live-badge {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; color: var(--accent); font-weight: 500;
+  }
+  .live-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent); animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+  /* NAV */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex; gap: 0;
+  }
+  .nav-tab {
+    padding: 12px 18px;
+    font-size: 13px; font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active { color: var(--text); border-bottom-color: var(--text); }
+
+  /* MAIN */
+  main { max-width: 1000px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  /* PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ALERT */
+  .alert {
+    background: var(--danger-light);
+    border: 1px solid rgba(176,58,46,0.18);
+    border-radius: var(--radius-sm);
+    padding: 11px 16px;
+    font-size: 13px; color: var(--danger); font-weight: 500;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* STATS */
+  .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 20px; }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .stat .label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+  .stat .val { font-size: 18px; font-weight: 500; }
+  .stat .sub { font-size: 11px; color: var(--subtle); margin-top: 2px; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .card-title {
+    font-size: 10px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.09em;
+    color: var(--muted); margin-bottom: 14px;
+  }
+
+  /* EVENTS */
+  .event {
+    display: flex; gap: 10px; padding: 8px 0;
+    border-bottom: 1px solid var(--border); align-items: flex-start;
+  }
+  .event:last-child { border-bottom: none; padding-bottom: 0; }
+  .event-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .event-time { font-size: 11px; color: var(--subtle); min-width: 44px; margin-top: 2px; flex-shrink: 0; }
+  .event-body { flex: 1; min-width: 0; }
+  .event-name { font-size: 13.5px; line-height: 1.35; }
+  .event-who { font-size: 11px; color: var(--subtle); margin-top: 1px; }
+  .event-date-label { font-size: 10px; font-weight: 500; color: var(--subtle); text-transform: uppercase; letter-spacing: 0.07em; margin: 10px 0 4px; }
+  .event-date-label:first-child { margin-top: 0; }
+
+  .tag {
+    display: inline-block; font-size: 10px; padding: 1px 6px;
+    border-radius: 4px; font-weight: 500; margin-left: 5px;
+    vertical-align: middle; position: relative; top: -1px;
+  }
+  .tag-sports { background: var(--info-light); color: var(--info); }
+  .tag-travel { background: var(--warning-light); color: var(--warning); }
+  .tag-church { background: #f0eef8; color: var(--family); }
+  .tag-work { background: #f0f0ee; color: #555; }
+
+  /* LOADING */
+  .loading {
+    text-align: center; padding: 40px 20px;
+    color: var(--muted); font-size: 13px;
+  }
+  .spinner {
+    width: 20px; height: 20px; border: 2px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* PERSON ROWS */
+  .person-row {
+    display: flex; gap: 10px; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+  }
+  .person-row:last-child { border-bottom: none; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 500; flex-shrink: 0;
+  }
+  .av-t { background: #fdecea; color: var(--tim); }
+  .av-e { background: #e8f0ea; color: var(--erin); }
+  .av-r { background: #eaf1fb; color: var(--ryan); }
+  .av-f { background: #fef3e2; color: var(--flynn); }
+  .person-name { font-size: 13px; font-weight: 500; min-width: 52px; }
+  .person-status { font-size: 12px; color: var(--muted); flex: 1; }
+
+  /* CHECKLIST */
+  .check-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer;
+  }
+  .check-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .check-item input[type=checkbox] { width: 15px; height: 15px; margin-top: 2px; flex-shrink: 0; accent-color: var(--accent); cursor: pointer; }
+  .check-body { flex: 1; }
+  .check-text { font-size: 13.5px; transition: all 0.15s; }
+  .check-text.done { text-decoration: line-through; color: var(--subtle); }
+  .check-sub { font-size: 11px; color: var(--subtle); margin-top: 1px; }
+  .check-due { font-size: 11px; color: var(--danger); font-weight: 500; white-space: nowrap; padding-left: 8px; margin-top: 2px; }
+  .check-due.ok { color: var(--subtle); font-weight: 400; }
+
+  /* CHORES */
+  .chore-header { display: grid; grid-template-columns: 1fr repeat(4,38px); gap: 4px; margin-bottom: 8px; align-items: center; }
+  .chore-row { display: grid; grid-template-columns: 1fr repeat(4,38px); gap: 4px; padding: 8px 0; border-bottom: 1px solid var(--border); align-items: center; }
+  .chore-row:last-of-type { border-bottom: none; }
+  .chore-name { font-size: 13.5px; display: flex; align-items: center; gap: 8px; }
+  .chore-cell { display: flex; justify-content: center; align-items: center; }
+  .chore-cell input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent); }
+  .score-row { display: grid; grid-template-columns: 1fr repeat(4,38px); gap: 4px; padding-top: 10px; margin-top: 8px; border-top: 1px solid var(--border); }
+  .score-label { font-size: 11px; color: var(--muted); align-self: center; }
+  .score-val { font-size: 14px; font-weight: 500; text-align: center; }
+
+  /* TRIPS */
+  .trip-hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 14px;
+  }
+  .trip-title { font-family: 'DM Serif Display', serif; font-size: 28px; font-weight: 400; margin-bottom: 6px; }
+  .trip-meta { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+  .trip-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .trip-tag {
+    font-size: 12px; padding: 4px 10px; border-radius: 20px;
+    background: var(--surface2); color: var(--muted); font-weight: 500;
+  }
+  .day-row {
+    display: flex; gap: 14px; padding: 12px 0;
+    border-bottom: 1px solid var(--border); align-items: flex-start;
+  }
+  .day-row:last-child { border-bottom: none; }
+  .day-num { font-size: 11px; font-weight: 500; color: var(--subtle); min-width: 48px; margin-top: 2px; }
+  .day-body { flex: 1; }
+  .day-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+  .day-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* FOOTER */
+  footer {
+    text-align: center; padding: 20px;
+    font-size: 12px; color: var(--subtle);
+    border-top: 1px solid var(--border);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 680px) {
+    header { padding: 12px 16px; }
+    nav { padding: 0 12px; overflow-x: auto; }
+    main { padding: 16px 12px 40px; }
+    .stats { grid-template-columns: repeat(2,1fr); }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .chore-header, .chore-row, .score-row { grid-template-columns: 1fr repeat(4,32px); }
+    .logo .tagline { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <h1>O'Donovan Family</h1>
+    <span class="tagline">La Jolla, CA</span>
+  </div>
+  <div class="header-meta">
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span id="liveStatus">Loading calendar...</span>
+    </div>
+    <span id="dateDisplay"></span>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-tab active" onclick="showPanel('dashboard')">Dashboard</div>
+  <div class="nav-tab" onclick="showPanel('calendar')">Calendar</div>
+  <div class="nav-tab" onclick="showPanel('chores')">Chores</div>
+  <div class="nav-tab" onclick="showPanel('belize')">Belize Trip</div>
+  <div class="nav-tab" onclick="showPanel('japan')">Japan Trip</div>
+</nav>
+
+<main>
+
+  <!-- DASHBOARD -->
+  <div class="panel active" id="panel-dashboard">
+    <div id="alertBanner"></div>
+    <div class="stats" id="statsRow">
+      <div class="stat"><div class="label">Today</div><div class="val" id="statToday">—</div><div class="sub" id="statTodaySub"></div></div>
+      <div class="stat"><div class="label">This week</div><div class="val" id="statWeek">—</div><div class="sub">shared events</div></div>
+      <div class="stat"><div class="label">Next up</div><div class="val" id="statNext">—</div><div class="sub" id="statNextSub"></div></div>
+      <div class="stat"><div class="label">Calendar</div><div class="val">Live ✓</div><div class="sub">auto-refreshing</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Today & Tomorrow</div>
+        <div id="todayEvents"><div class="loading"><div class="spinner"></div>Fetching calendar...</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">This Week</div>
+        <div id="weekEvents"><div class="loading"><div class="spinner"></div>Fetching calendar...</div></div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">Family Today</div>
+        <div class="person-row"><div class="avatar av-t">T</div><div class="person-name">Tim</div><div class="person-status" id="timStatus">Loading...</div></div>
+        <div class="person-row"><div class="avatar av-e">E</div><div class="person-name">Erin</div><div class="person-status" id="erinStatus">Loading...</div></div>
+        <div class="person-row"><div class="avatar av-r">R</div><div class="person-name">Ryan</div><div class="person-status" id="ryanStatus">Home</div></div>
+        <div class="person-row"><div class="avatar av-f">F</div><div class="person-name">Flynn</div><div class="person-status" id="flynnStatus">Home</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Checklist</div>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><div class="check-body"><div class="check-text">Pay SD county property taxes</div><div class="check-sub">San Diego County Tax Collector</div></div><div class="check-due">Apr 10 ⚠</div></label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><div class="check-body"><div class="check-text">Ryan — SF lax trip logistics</div><div class="check-sub">Bishop's departs Apr 9</div></div><div class="check-due ok">Apr 9</div></label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><div class="check-body"><div class="check-text">Book Blancaneaux Lodge, Belize</div><div class="check-sub">Call +1 866-356-5881 · Dec 23–28</div></div><div class="check-due ok">ASAP</div></label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><div class="check-body"><div class="check-text">Book Victoria House, Ambergris Caye</div><div class="check-sub">victoria-house.com · Dec 28–Jan 1</div></div><div class="check-due ok">ASAP</div></label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><div class="check-body"><div class="check-text">Book Niseko chalet — 15 people</div><div class="check-sub">nisekoblack.com · Dec 25–31</div></div><div class="check-due ok">ASAP</div></label>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Daily Chores</div>
+        <div class="chore-header">
+          <div></div>
+          <div class="chore-cell"><div class="avatar av-t" style="width:26px;height:26px;font-size:10px;">T</div></div>
+          <div class="chore-cell"><div class="avatar av-e" style="width:26px;height:26px;font-size:10px;">E</div></div>
+          <div class="chore-cell"><div class="avatar av-r" style="width:26px;height:26px;font-size:10px;">R</div></div>
+          <div class="chore-cell"><div class="avatar av-f" style="width:26px;height:26px;font-size:10px;">F</div></div>
+        </div>
+        <div class="chore-row"><div class="chore-name"><span>🍽</span> Dishes</div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div></div>
+        <div class="chore-row"><div class="chore-name"><span>🗑</span> Trash</div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div></div>
+        <div class="chore-row"><div class="chore-name"><span>🐕</span> Walk Ruby</div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div></div>
+        <div class="chore-row"><div class="chore-name"><span>🥣</span> Feed Ruby</div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores()"></div></div>
+        <div class="score-row"><div class="score-label">Done today</div><div class="score-val" id="s0">0</div><div class="score-val" id="s1">0</div><div class="score-val" id="s2">0</div><div class="score-val" id="s3">0</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="panel" id="panel-calendar">
+    <div class="card">
+      <div class="card-title">Upcoming shared events</div>
+      <div id="allEvents"><div class="loading"><div class="spinner"></div>Loading events...</div></div>
+    </div>
+  </div>
+
+  <!-- CHORES -->
+  <div class="panel" id="panel-chores">
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Daily Chores — Full View</div>
+        <div class="chore-header">
+          <div></div>
+          <div class="chore-cell"><div class="avatar av-t" style="width:28px;height:28px;font-size:11px;">T</div></div>
+          <div class="chore-cell"><div class="avatar av-e" style="width:28px;height:28px;font-size:11px;">E</div></div>
+          <div class="chore-cell"><div class="avatar av-r" style="width:28px;height:28px;font-size:11px;">R</div></div>
+          <div class="chore-cell"><div class="avatar av-f" style="width:28px;height:28px;font-size:11px;">F</div></div>
+        </div>
+        <div class="chore-row"><div class="chore-name"><span>🍽</span> Dishes</div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div></div>
+        <div class="chore-row"><div class="chore-name"><span>🗑</span> Trash</div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div></div>
+        <div class="chore-row"><div class="chore-name"><span>🐕</span> Walk Ruby</div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div></div>
+        <div class="chore-row"><div class="chore-name"><span>🥣</span> Feed Ruby</div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div><div class="chore-cell"><input type="checkbox" onchange="scoreChores2()"></div></div>
+        <div class="score-row"><div class="score-label">Done today</div><div class="score-val" id="s20">0</div><div class="score-val" id="s21">0</div><div class="score-val" id="s22">0</div><div class="score-val" id="s23">0</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Checklist</div>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><div class="check-body"><div class="check-text">Pay SD county property taxes</div><div class="check-sub">Due April 10</div></div><div class="check-due">Apr 10 ⚠</div></label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><div class="check-body"><div class="check-text">Ryan — SF lax trip logistics</div><div class="check-sub">Bishop's departs Apr 9</div></div><div class="check-due ok">Apr 9</div></label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><div class="check-body"><div class="check-text">Book Blancaneaux Lodge, Belize</div><div class="check-sub">+1 866-356-5881 · Dec 23–28</div></div><div class="check-due ok">ASAP</div></label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><div class="check-body"><div class="check-text">Book Victoria House, Ambergris Caye</div><div class="check-sub">victoria-house.com · Dec 28–Jan 1</div></div><div class="check-due ok">ASAP</div></label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><div class="check-body"><div class="check-text">Book Niseko chalet — 15 people</div><div class="check-sub">nisekoblack.com · Dec 25–31</div></div><div class="check-due ok">ASAP</div></label>
+        <label class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><div class="check-body"><div class="check-text">Japan flights SAN→NRT Dec 21 (JAL JL65)</div><div class="check-sub">Departs 11:45 AM · 787-8</div></div><div class="check-due ok">Book now</div></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- BELIZE TRIP -->
+  <div class="panel" id="panel-belize">
+    <div class="trip-hero">
+      <div class="trip-title">Belize Christmas 2026</div>
+      <div class="trip-meta">3 families · 8 adults · 8 kids · Dec 23 – Jan 1 · 10 nights</div>
+      <div class="trip-tags">
+        <span class="trip-tag">🌴 Jungle</span>
+        <span class="trip-tag">🐠 Reef</span>
+        <span class="trip-tag">🏛 Mayan ruins</span>
+        <span class="trip-tag">🦇 ATM Cave</span>
+        <span class="trip-tag">🏄 Snorkeling</span>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Base 1 — Cayo District · 6 nights</div>
+        <div style="font-size:14px;font-weight:500;margin-bottom:4px;">Blancaneaux Lodge (Coppola)</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">Dec 23–28 · Mountain Pine Ridge · +1 866-356-5881</div>
+        <div class="day-row"><div class="day-num">Dec 23</div><div class="day-body"><div class="day-title">Arrive · Settle in</div><div class="day-detail">Fly SAN → Belize City via Houston/Dallas. Transfer to Blancaneaux (~2hrs). Welcome dinner by the river.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 24</div><div class="day-body"><div class="day-title">Big Rock Falls + Christmas Eve</div><div class="day-detail">4-mile hike to waterfall swimming hole — all ages. Candlelit Christmas Eve dinner at lodge.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 25</div><div class="day-body"><div class="day-title">Caracol Mayan Ruins</div><div class="day-detail">Largest Maya site in Belize. Half-day trip, spider monkeys, Rio Frio Cave en route. Christmas Day lunch back at lodge.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 26</div><div class="day-body"><div class="day-title">ATM Cave (teens + adults)</div><div class="day-detail">National Geographic's #1 cave. Swim in, climb through ceremonial chambers. Ages 8+ required. Younger kids stay at resort with one parent.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 27</div><div class="day-body"><div class="day-title">Xunantunich Ruins</div><div class="day-detail">Hand-cranked river ferry, climb El Castillo pyramid — views into Guatemala. All ages including 4-year-old.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 28</div><div class="day-body"><div class="day-title">Transfer to Ambergris Caye</div><div class="day-detail">45-min charter flight Belize City → San Pedro. Check in to Victoria House.</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Base 2 — Ambergris Caye · 4 nights</div>
+        <div style="font-size:14px;font-weight:500;margin-bottom:4px;">Victoria House Resort & Spa</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">Dec 28–Jan 1 · victoria-house.com · +1 800-247-5159</div>
+        <div class="day-row"><div class="day-num">Dec 28</div><div class="day-body"><div class="day-title">Arrive · Beach afternoon</div><div class="day-detail">Check in, settle into resort, afternoon on the dock and beach. Sunset dinner.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 29</div><div class="day-body"><div class="day-title">Belize Barrier Reef Snorkeling</div><div class="day-detail">Full-day reef excursion from resort dock. Hol Chan Marine Reserve + Shark Ray Alley. All ages.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 30</div><div class="day-body"><div class="day-title">Cave Tubing + San Ignacio</div><div class="day-detail">Optional day trip — cave tubing on Caves Branch River. Or free beach day.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 31</div><div class="day-body"><div class="day-title">New Year's Eve</div><div class="day-detail">Beach BBQ, fireworks over the water, kids and adults ringing in the new year together in the Caribbean.</div></div></div>
+        <div class="day-row"><div class="day-num">Jan 1</div><div class="day-body"><div class="day-title">Fly home</div><div class="day-detail">Charter back to Belize City, connect through Houston/Dallas → SAN, ORD, DEN.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAPAN TRIP -->
+  <div class="panel" id="panel-japan">
+    <div class="trip-hero">
+      <div class="trip-title">Japan — Christmas & New Year 2026</div>
+      <div class="trip-meta">O'Donovan family · 15 people · Dec 21 – Dec 31 · 11 days including travel</div>
+      <div class="trip-tags">
+        <span class="trip-tag">✈️ JAL JL65 direct SAN→NRT</span>
+        <span class="trip-tag">🗼 3 nights Tokyo</span>
+        <span class="trip-tag">⛷ 5 nights Niseko</span>
+        <span class="trip-tag">🌨 Powder skiing</span>
+        <span class="trip-tag">♨️ Private onsen</span>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Tokyo — Dec 22–25</div>
+        <div class="day-row"><div class="day-num">Dec 21</div><div class="day-body"><div class="day-title">Fly SAN → Tokyo (JAL JL65)</div><div class="day-detail">Departs SAN 11:45 AM. Boeing 787-8. ~12 hours nonstop.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 22</div><div class="day-body"><div class="day-title">Arrive Narita · Check in</div><div class="day-detail">Arrive 4:40 PM. Transfer to Tokyo (Shinkansen or bus ~60 min). Early dinner, rest.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 23</div><div class="day-body"><div class="day-title">Tokyo Day 1 — Asakusa & Shibuya</div><div class="day-detail">Senso-ji Temple, Nakamise shopping street, Shibuya crossing, Harajuku for the kids. Ramen dinner.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 24</div><div class="day-body"><div class="day-title">Tokyo Day 2 — Shinjuku & TeamLab</div><div class="day-detail">TeamLab Planets (book ahead — sells out). Shinjuku for dinner. Christmas Eve in Tokyo is magical — illuminations everywhere.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 25</div><div class="day-body"><div class="day-title">Fly Tokyo → Sapporo → Niseko</div><div class="day-detail">ANA or JAL SFO~55 min flight. Transfer to Niseko by bus or private van (~2 hrs).</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Niseko — Dec 25–31</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">Private chalet · 15 guests · nisekoblack.com · private onsen · ski-in/ski-out</div>
+        <div class="day-row"><div class="day-num">Dec 25</div><div class="day-body"><div class="day-title">Arrive Niseko · Christmas dinner</div><div class="day-detail">Check into private chalet. Private chef Christmas dinner. First look at the mountain.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 26–27</div><div class="day-body"><div class="day-title">Powder days</div><div class="day-detail">Niseko gets the best powder in the world — Hokkaido's Japow is legendary. All ages on the mountain.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 28</div><div class="day-body"><div class="day-title">Ski + Onsen day</div><div class="day-detail">Morning ski, afternoon private onsen at chalet. Evening shabu-shabu dinner in Hirafu village.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 29–30</div><div class="day-body"><div class="day-title">Free ski days</div><div class="day-detail">Explore Grand Hirafu, Hanazono, and Annupuri. Ramen lunches on mountain. Kids ski school available.</div></div></div>
+        <div class="day-row"><div class="day-num">Dec 31</div><div class="day-body"><div class="day-title">New Year's Eve · Fly home</div><div class="day-detail">Morning ski, transfer to Sapporo, fly NRT. JAL JL66 NRT→SAN departs evening, lands same day Dec 31 (date line).</div></div></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  O'Donovan Family · La Jolla, CA · Calendar syncs live from Google Calendar
+</footer>
+
+<script>
+// ── DATE DISPLAY ──
+const now = new Date();
+document.getElementById('dateDisplay').textContent =
+  now.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+
+// ── NAV ──
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── CHECKLIST ──
+function toggleCheck(cb) {
+  cb.closest('label').querySelector('.check-text').classList.toggle('done', cb.checked);
+}
+
+// ── CHORES ──
+function scoreChores() {
+  const rows = document.querySelectorAll('#panel-dashboard .chore-row');
+  const counts = [0,0,0,0];
+  rows.forEach(r => r.querySelectorAll('input[type=checkbox]').forEach((cb,i) => { if(cb.checked) counts[i]++; }));
+  counts.forEach((c,i) => { document.getElementById('s'+i).textContent = c; });
+}
+function scoreChores2() {
+  const rows = document.querySelectorAll('#panel-chores .chore-row');
+  const counts = [0,0,0,0];
+  rows.forEach(r => r.querySelectorAll('input[type=checkbox]').forEach((cb,i) => { if(cb.checked) counts[i]++; }));
+  counts.forEach((c,i) => { document.getElementById('s2'+i).textContent = c; });
+}
+
+// ── CALENDAR LIVE FETCH ──
+const ICAL_URL = 'https://calendar.google.com/calendar/ical/odtim3%40gmail.com/public/basic.ics';
+const PROXY = 'https://corsproxy.io/?';
+
+async function fetchCalendar() {
+  try {
+    const res = await fetch(PROXY + encodeURIComponent(ICAL_URL));
+    if (!res.ok) throw new Error('fetch failed');
+    const text = await res.text();
+    const events = parseICS(text);
+    renderCalendar(events);
+    document.getElementById('liveStatus').textContent = 'Live · updated just now';
+  } catch(e) {
+    document.getElementById('liveStatus').textContent = 'Calendar unavailable';
+    document.getElementById('todayEvents').innerHTML = '<div style="font-size:13px;color:var(--muted);padding:12px 0;">Could not load calendar. Check back shortly.</div>';
+    document.getElementById('weekEvents').innerHTML = '';
+    document.getElementById('allEvents').innerHTML = '';
+  }
+}
+
+function parseICS(text) {
+  const events = [];
+  const blocks = text.split('BEGIN:VEVENT');
+  blocks.shift();
+  for (const block of blocks) {
+    const get = (key) => {
+      const match = block.match(new RegExp(key + '[^:]*:([^\\r\\n]+)'));
+      return match ? match[1].trim() : '';
+    };
+    const summary = get('SUMMARY') || '(No title)';
+    const dtstart = get('DTSTART');
+    const dtend = get('DTEND');
+    const attendees = (block.match(/ATTENDEE/g) || []).length;
+    const organizer = block.includes('ORGANIZER');
+    const isShared = attendees > 0 || block.includes('ATTENDEE');
+
+    if (!dtstart) continue;
+
+    let startDate;
+    if (dtstart.includes('T')) {
+      // datetime
+      const y = dtstart.substr(0,4), mo = dtstart.substr(4,2), d = dtstart.substr(6,2);
+      const h = dtstart.substr(9,2), mi = dtstart.substr(11,2);
+      startDate = new Date(`${y}-${mo}-${d}T${h}:${mi}:00`);
+    } else {
+      // all-day
+      const y = dtstart.substr(0,4), mo = dtstart.substr(4,2), d = dtstart.substr(6,2);
+      startDate = new Date(`${y}-${mo}-${d}T00:00:00`);
+    }
+
+    events.push({ summary, startDate, isShared, attendees, allDay: !dtstart.includes('T') });
+  }
+  events.sort((a,b) => a.startDate - b.startDate);
+  return events;
+}
+
+function fmtTime(d, allDay) {
+  if (allDay) return 'All day';
+  return d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit', hour12:true }).replace(':00','');
+}
+
+function fmtDayLabel(d) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const tomorrow = new Date(today); tomorrow.setDate(today.getDate()+1);
+  const dt = new Date(d); dt.setHours(0,0,0,0);
+  if (dt.getTime() === today.getTime()) return 'Today';
+  if (dt.getTime() === tomorrow.getTime()) return 'Tomorrow';
+  return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+}
+
+function tagForEvent(name) {
+  const n = name.toLowerCase();
+  if (n.includes('lax') || n.includes('tennis') || n.includes('golf') || n.includes('pickleball') || n.includes('sport') || n.includes('practice') || n.includes('game') || n.includes('blues') || n.includes('gwb')) return '<span class="tag tag-sports">sports</span>';
+  if (n.includes('church') || n.includes('mass') || n.includes('reconciliation') || n.includes('confession') || n.includes('mary star')) return '<span class="tag tag-church">church</span>';
+  if (n.includes('flight') || n.includes('hotel') || n.includes('travel') || n.includes('trip') || n.includes('fly') || n.includes('airport')) return '<span class="tag tag-travel">travel</span>';
+  if (n.includes('meeting') || n.includes('committee') || n.includes('work') || n.includes('call')) return '<span class="tag tag-work">work</span>';
+  return '';
+}
+
+function dotColor(name) {
+  const n = name.toLowerCase();
+  if (n.includes('ryan')) return 'var(--ryan)';
+  if (n.includes('flynn')) return 'var(--flynn)';
+  if (n.includes('erin')) return 'var(--erin)';
+  return 'var(--family)';
+}
+
+function renderCalendar(events) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const tomorrow = new Date(today); tomorrow.setDate(today.getDate()+1);
+  const weekEnd = new Date(today); weekEnd.setDate(today.getDate()+7);
+
+  // Filter shared only
+  const shared = events.filter(e => e.isShared && e.startDate >= today);
+
+  // TODAY + TOMORROW
+  const todayTom = shared.filter(e => {
+    const d = new Date(e.startDate); d.setHours(0,0,0,0);
+    return d <= tomorrow;
+  });
+
+  // THIS WEEK (days 2–7)
+  const thisWeek = shared.filter(e => {
+    const d = new Date(e.startDate); d.setHours(0,0,0,0);
+    return d > tomorrow && d <= weekEnd;
+  });
+
+  // ALL upcoming (30 days)
+  const upcoming = shared.filter(e => {
+    const limit = new Date(today); limit.setDate(today.getDate()+30);
+    return e.startDate <= limit;
+  });
+
+  // Stats
+  const todayEvents = shared.filter(e => { const d = new Date(e.startDate); d.setHours(0,0,0,0); return d.getTime()===today.getTime(); });
+  document.getElementById('statToday').textContent = todayEvents.length || '0';
+  document.getElementById('statTodaySub').textContent = todayEvents.length ? todayEvents[0].summary.substring(0,22) : 'No shared events';
+  document.getElementById('statWeek').textContent = thisWeek.length;
+  if (shared.length > 0) {
+    const next = shared[0];
+    document.getElementById('statNext').textContent = fmtDayLabel(next.startDate);
+    document.getElementById('statNextSub').textContent = next.summary.substring(0,22);
+  }
+
+  // Render today/tomorrow
+  document.getElementById('todayEvents').innerHTML = renderEventList(todayTom, true) || '<div style="font-size:13px;color:var(--muted);padding:8px 0;">No shared events today or tomorrow</div>';
+
+  // Render this week
+  document.getElementById('weekEvents').innerHTML = renderEventList(thisWeek, true) || '<div style="font-size:13px;color:var(--muted);padding:8px 0;">No shared events this week</div>';
+
+  // Render all
+  document.getElementById('allEvents').innerHTML = renderEventList(upcoming, true) || '<div style="font-size:13px;color:var(--muted);padding:8px 0;">No upcoming shared events</div>';
+
+  // Family status
+  const todayEvs = todayEvents;
+  const timEvs = todayEvs.filter(e => e.summary.toLowerCase().includes('tim') || e.attendees > 0);
+  document.getElementById('timStatus').textContent = timEvs.length ? timEvs[0].summary.substring(0,30) : 'Home';
+  document.getElementById('erinStatus').textContent = todayEvs.length ? todayEvs[0].summary.substring(0,30) : 'Home';
+}
+
+function renderEventList(events, showDateLabels) {
+  if (!events.length) return '';
+  let html = '';
+  let lastLabel = '';
+  for (const e of events) {
+    const label = fmtDayLabel(e.startDate);
+    if (showDateLabels && label !== lastLabel) {
+      html += `<div class="event-date-label">${label}</div>`;
+      lastLabel = label;
+    }
+    html += `<div class="event">
+      <div class="event-dot" style="background:${dotColor(e.summary)}"></div>
+      <div class="event-time">${fmtTime(e.startDate, e.allDay)}</div>
+      <div class="event-body">
+        <div class="event-name">${e.summary}${tagForEvent(e.summary)}</div>
+      </div>
+    </div>`;
+  }
+  return html;
+}
+
+// Kick off fetch
+fetchCalendar();
+</script>
+
+</body>
+</html>
